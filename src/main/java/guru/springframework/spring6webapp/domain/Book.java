@@ -13,6 +13,10 @@ public class Book {
     private String title;
     private String isbn;
 
+    @ManyToMany
+    @JoinTable(name = "author_book",joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors;
+
     public Long getId() {
         return id;
     }
@@ -33,6 +37,17 @@ public class Book {
         this.isbn = isbn;
     }
 
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void addAuthor(Author author) {
+        this.authors.add(author);
+    }
+
+    public void removeAuthor(Author author) {
+        this.authors.add(author);
+    }
     @Override
     public String toString() {
         return String.format("Book[d = %d, title = %s, isbn = %s]", id, title, isbn);

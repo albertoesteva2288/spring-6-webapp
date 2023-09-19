@@ -13,6 +13,10 @@ public class Author {
     private String firstName;
     private String lastName;
 
+    @ManyToMany(mappedBy = "authors")
+    private Set<Book> books;
+
+
     public Long getId() {
         return id;
     }
@@ -33,6 +37,17 @@ public class Author {
         this.lastName = lastName;
     }
 
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void addBook(Book book) {
+        this.books.add(book);
+    }
+
+    public void removeBook(Book book) {
+        this.books.remove(book);
+    }
     @Override
     public String toString() {
         return String.format("Author[id = %d, firstName = %s, lastName = %s]", id, firstName, lastName);
