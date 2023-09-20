@@ -2,6 +2,7 @@ package guru.springframework.spring6webapp.domain;
 
 import jakarta.persistence.*;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -15,7 +16,7 @@ public class Book {
 
     @ManyToMany
     @JoinTable(name = "author_book",joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<Author> authors;
+    private Set<Author> authors = new LinkedHashSet<>();;
 
     public Long getId() {
         return id;
@@ -48,6 +49,20 @@ public class Book {
     public void removeAuthor(Author author) {
         this.authors.add(author);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book book)) return false;
+
+        return getId() != null ? getId().equals(book.getId()) : book.getId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
+    }
+
     @Override
     public String toString() {
         return String.format("Book[d = %d, title = %s, isbn = %s]", id, title, isbn);
