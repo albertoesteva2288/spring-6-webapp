@@ -2,8 +2,12 @@ package guru.springframework.spring6webapp.bootstrap;
 
 import guru.springframework.spring6webapp.domain.Author;
 import guru.springframework.spring6webapp.domain.Book;
+import guru.springframework.spring6webapp.domain.Publisher;
 import guru.springframework.spring6webapp.repository.AuthorRepository;
 import guru.springframework.spring6webapp.repository.BookRepository;
+import guru.springframework.spring6webapp.repository.PublisherRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +18,14 @@ public class BootStrapData implements CommandLineRunner {
 
     private final BookRepository bookRepository;
 
-    public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository) {
+    private final PublisherRepository publisherRepository;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     @Override
@@ -55,8 +64,28 @@ public class BootStrapData implements CommandLineRunner {
         bookRepository.save(noEJB);
         rod.addBook(noEJB);
 
-        System.out.println("Author count: " + authorRepository.count());
-        System.out.println("Book count: " + authorRepository.count());
+        Publisher wileyPublisher = new Publisher();
+        wileyPublisher.setPublisherName("Wiley Publishing, Inc");
+        wileyPublisher.setAddress("Crosspoint Blvd");
+        wileyPublisher.setCity("Indianapolis");
+        wileyPublisher.setState("Indiana");
+        wileyPublisher.setZip("10475");
+
+        Publisher adisonPublisher = new Publisher();
+        adisonPublisher.setPublisherName("Adison Wesley");
+        adisonPublisher.setAddress("Boylston Street");
+        adisonPublisher.setCity("Boston");
+        adisonPublisher.setState("Massachusetts");
+        adisonPublisher.setZip("02116");
+
+        publisherRepository.save(wileyPublisher);
+        publisherRepository.save(adisonPublisher);
+
+
+        logger.info("Author count: {}" , authorRepository.count());
+        logger.info("Book count: {}" , authorRepository.count());
+        logger.info("Publisher count: {}" , publisherRepository.count());
+
 
 
 
