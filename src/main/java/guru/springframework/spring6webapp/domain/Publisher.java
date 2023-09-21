@@ -1,9 +1,9 @@
 package guru.springframework.spring6webapp.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 public class Publisher {
@@ -20,7 +20,8 @@ public class Publisher {
     private String state;
 
     private String zip;
-
+   @OneToMany(mappedBy = "publisher")
+   private Set<Book> books = new LinkedHashSet<>();
     public Long getId() {
         return id;
     }
@@ -65,6 +66,16 @@ public class Publisher {
         this.zip = zip;
     }
 
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void addBook(Book book) {
+        this.books.add(book);
+    }
+    public void removeBook(Book book) {
+        this.books.remove(book);
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

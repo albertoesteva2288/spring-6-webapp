@@ -20,7 +20,7 @@ public class BootStrapData implements CommandLineRunner {
 
     private final PublisherRepository publisherRepository;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public BootStrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
@@ -46,24 +46,8 @@ public class BootStrapData implements CommandLineRunner {
         Book noEJB = new Book();
         noEJB.setTitle("J2EE Development without EJB");
         noEJB.setIsbn("54757585");
-        // Step 2: The owner book needs an author in the db (needs the author id) before to be persisted, so ....
-        authorRepository.save(eric); // Now eric is a managed object and have an id
-        // Step 3: Add the author to the set of authors of the book
-        // I modify the set method to an add method to add only one author at once
-        // DON'T FORGET INITIALIZE THE SET OR YOU'LL GET AN ERROR
-        ddd.addAuthor(eric);
-        // Step 4: Save the book
-        bookRepository.save(ddd); // Now ddd is a managed object with an id too
-        // Step 5: Update the author
-        // Because author and book now are managed, they can be updated in the db using setter methods
-        // Of course... just until the end of method
-        eric.addBook(ddd);
 
-        authorRepository.save(rod);
-        noEJB.addAuthor(rod);
-        bookRepository.save(noEJB);
-        rod.addBook(noEJB);
-
+        // Adding publisher
         Publisher wileyPublisher = new Publisher();
         wileyPublisher.setPublisherName("Wiley Publishing, Inc");
         wileyPublisher.setAddress("Crosspoint Blvd");
@@ -78,8 +62,32 @@ public class BootStrapData implements CommandLineRunner {
         adisonPublisher.setState("Massachusetts");
         adisonPublisher.setZip("02116");
 
-        publisherRepository.save(wileyPublisher);
+        // Step 2: The owner book needs an Author and a Publisher in the db (needs the author id and publisher id) before to be persisted, so ....
+        authorRepository.save(eric); // Now eric is a managed object and have an id
+        // now needs a Publisher too
         publisherRepository.save(adisonPublisher);
+
+        // Step 3: Add the author to the set of authors of the book
+        // I modify the set method to an add method to add only one author at once
+        // DON'T FORGET INITIALIZE THE SET OR YOU'LL GET AN ERROR
+        ddd.addAuthor(eric);
+        // Setting a Publisher to the book
+        ddd.setPublisher(adisonPublisher);
+        // Step 4: Save the book
+        bookRepository.save(ddd); // Now ddd is a managed object with an id too
+        // Step 5: Update the author
+        // Because author, publisher and book now are managed, they can be updated in the db using setter methods
+        // Of course... just until the end of method
+        eric.addBook(ddd);
+       // adisonPublisher.addBook(ddd);
+
+        authorRepository.save(rod);
+        publisherRepository.save(wileyPublisher);
+        noEJB.addAuthor(rod);
+        noEJB.setPublisher(wileyPublisher);
+        bookRepository.save(noEJB);
+        rod.addBook(noEJB);
+       // wileyPublisher.addBook(noEJB);
 
 
         logger.info("Author count: {}" , authorRepository.count());
